@@ -1,31 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Web.Data;
+using eUI.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Data;
 using Infrastructure.Identity;
+using Infrastructure;
+using ApplicationCore.Interfaces;
+using Infrastructure.Logging;
 
-namespace Web
+namespace eUI
 {
     public class Startup
     {
+
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
@@ -33,7 +32,7 @@ namespace Web
             ConfigureInMemoryDatabases(services);
 
             // use real database
-            //COnfigureProductionServices(services);
+            //ConfigureProductionServices(services);
         }
 
         private void ConfigureInMemoryDatabases(IServiceCollection services)
@@ -43,12 +42,13 @@ namespace Web
                 c.UseInMemoryDatabase("Catalog"));
 
             // Add Identity DbContext
-            services.AddDbContext<AppIdentityDbContext>(opt =>
-                opt.UseInMemoryDatabase("Identity"));
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseInMemoryDatabase("Identity"));
 
             ConfigureServices(services);
         }
 
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -59,18 +59,32 @@ namespace Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlServer(
-            //        Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
 
-            services.AddScoped(typeof(IAsyncRepository<>), typeof(efRepository<>));
+            CreateIdentityIfNotCreated(services);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
+
+        private static void CreateIdentityIfNotCreated(IServiceCollection services)
+        {
+            var sp = services.BuildServiceProvider();
+            using (var scope = sp.CreateScope())
+            {
+                var existingUserManager = scope.ServiceProvider
+                    .GetService<UserManager<ApplicationUser>>();
+                if (existingUserManager == null)
+                {
+                    services.AddIdentity<ApplicationUser, IdentityRole>()
+                        .AddDefaultUI(UIFramework.Bootstrap4)
+                        .AddEntityFrameworkStores<AppIdentityDbContext>()
+                                        .AddDefaultTokenProviders();
+                }
+            }
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
