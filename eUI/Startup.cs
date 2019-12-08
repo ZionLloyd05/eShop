@@ -13,6 +13,10 @@ using Infrastructure.Identity;
 using Infrastructure;
 using ApplicationCore.Interfaces;
 using Infrastructure.Logging;
+using eUI.Services;
+using eUI.Interfaces;
+using ApplicationCore;
+using ApplicationCore.Services;
 
 namespace eUI
 {
@@ -60,12 +64,19 @@ namespace eUI
             });
 
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
+            services.AddScoped<CatalogViewModelService>();
+            services.Configure<CatalogSettings>(Configuration);
+            services.AddSingleton<IUriComposer>(new UriComposer(Configuration.Get<CatalogSettings>()));
+
 
             CreateIdentityIfNotCreated(services);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+
+            services.AddMemoryCache();
         }
 
         private static void CreateIdentityIfNotCreated(IServiceCollection services)

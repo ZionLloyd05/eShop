@@ -35,11 +35,7 @@ namespace eUI.Services
             _uriComposer = uriComposer;
         }
 
-        public Task<IEnumerable<SelectListItem>> GetBrands()
-        {
-            throw new NotImplementedException();
-        }
-
+      
         public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId)
         {
             _logger.LogInformation("Get CatalogeItems Called..");
@@ -84,9 +80,39 @@ namespace eUI.Services
             return vm;
         }
 
-        public Task<IEnumerable<SelectList>> GetTypes()
+        public async Task<IEnumerable<SelectListItem>> GetBrands()
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("GetBrands called.");
+
+            var brands = await _brandRepository.ListAllAsync();
+
+            var items = new List<SelectListItem>
+            {
+                new SelectListItem() {Value=null, Text="All", Selected=true}
+            };
+            foreach (CatalogBrand brand in brands)
+            {
+                items.Add(new SelectListItem() { Value = brand.Id.ToString(), Text = brand.Brand });
+            }
+
+            return items;
         }
+
+        public async Task<IEnumerable<SelectListItem>> GetTypes()
+        {
+            _logger.LogInformation("GetTypes called.");
+            var types = await _typeRepository.ListAllAsync();
+            var items = new List<SelectListItem>
+            {
+                new SelectListItem() { Value = null, Text = "All", Selected = true }
+            };
+            foreach (CatalogType type in types)
+            {
+                items.Add(new SelectListItem() { Value = type.Id.ToString(), Text = type.Type });
+            }
+
+            return items;
+        }
+
     }
 }

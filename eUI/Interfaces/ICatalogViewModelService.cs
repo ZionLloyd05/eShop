@@ -11,6 +11,6 @@ namespace eUI.Interfaces
     {
         Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId);
         Task<IEnumerable<SelectListItem>> GetBrands();
-        Task<IEnumerable<SelectList>> GetTypes();
+        Task<IEnumerable<SelectListItem>> GetTypes();
     }
 }
