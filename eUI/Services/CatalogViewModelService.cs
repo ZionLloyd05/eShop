@@ -61,6 +61,7 @@ namespace eUI.Services
                     PictureUri = i.PictureUri,
                     Price = i.Price
                 }),
+
                 Brands = await GetBrands(),
                 Types = await GetTypes(),
                 BrandFilterApplied = brandId ?? 0, 
@@ -73,6 +74,13 @@ namespace eUI.Services
                     TotalPages = int.Parse(Math.Ceiling(((decimal)totalItems / itemsPage)).ToString())
                 }
             };
+
+            var items = vm.CatalogItems;
+
+            items.ToList().ForEach(elem =>
+            {
+                _logger.LogInformation(elem.Name);
+            });
 
             vm.PaginationInfo.Next = (vm.PaginationInfo.ActualPage == vm.PaginationInfo.TotalPages - 1) ? "is-disabled" : "";
             vm.PaginationInfo.Previous = (vm.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";

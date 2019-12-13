@@ -33,8 +33,8 @@ namespace ApplicationCore.Services
         public async Task DeleteBasketAsync(int basketId)
         {
             var basket = await _basketRepository.GetByIdAsync(basketId);
-            await _basketRepository.UpdateAsync(basket);
-.        }
+            await _basketRepository.DeleteAsync(basket);
+        }
 
         public async Task<int> GetBasketItemCountAsync(string userName)
         {

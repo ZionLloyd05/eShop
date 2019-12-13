@@ -46,7 +46,7 @@ namespace eUI.Services
             });
         }
 
-        public Task<IEnumerable<SelectListItem>> GetTypes()
+        public async Task<IEnumerable<SelectListItem>> GetTypes()
         {
             return await _cache.GetOrCreateAsync(_typesKey, async entry =>
             {

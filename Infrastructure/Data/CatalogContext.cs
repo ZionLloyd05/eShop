@@ -26,13 +26,15 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Basket>();
-            builder.Entity<Basket>();
-            builder.Entity<Basket>();
-            builder.Entity<Basket>();
-            builder.Entity<Basket>();
-            builder.Entity<Basket>();
-            builder.Entity<Basket>();
+            builder.Entity<Basket>(ConfigureBasket);
+            builder.Entity<CatalogBrand>(ConfigureCatalogBrand);
+            builder.Entity<CatalogType>(ConfigureCatalogType);
+            builder.Entity<CatalogItem>(ConfigureCatalogItem);
+            builder.Entity<Order>(ConfigureOrder);
+            builder.Entity<OrderItem>(ConfigureOrderItem);
+            builder.Entity<Address>(ConfigureAddress);
+            builder.Entity<CatalogItemOrdered>(ConfigureCatalogItemOrdered);
+            builder.Entity<BasketItem>(ConfigureBasketItem);
         }
 
         private void ConfigureBasketItem(EntityTypeBuilder<BasketItem> builder)
