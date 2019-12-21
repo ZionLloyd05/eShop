@@ -29,7 +29,9 @@ namespace eUI.Pages.Shared.Components.BasketComponent
         public async Task<IViewComponentResult> InvokeAsync(string userName)
         {
             var vm = new BasketComponentViewModel();
-            vm.ItemsCount = (await GetBasketViewModelAsync()).Items.Sum(i => i.Quantity);
+            var bvmodel = await GetBasketViewModelAsync();
+            if (bvmodel.BuyerId == null) return View(vm);
+            vm.ItemsCount = bvmodel.Items.Sum(i => i.Quantity);
             return View(vm);
         }
 
