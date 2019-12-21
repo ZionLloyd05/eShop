@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using eUI.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Data;
@@ -82,6 +81,8 @@ namespace eUI
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
             services.AddScoped<CatalogViewModelService>();
+            services.AddScoped<IBasketService, BasketService>();
+            services.AddScoped<IBasketViewModelService, BasketViewModelService>();
             services.Configure<CatalogSettings>(Configuration);
             services.AddSingleton<IUriComposer>(new UriComposer(Configuration.Get<CatalogSettings>()));
 
