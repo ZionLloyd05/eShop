@@ -81,6 +81,7 @@ namespace eUI
             services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped<ICatalogViewModelService, CachedCatalogViewModelService>();
             services.AddScoped<CatalogViewModelService>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IBasketViewModelService, BasketViewModelService>();
             services.Configure<CatalogSettings>(Configuration);

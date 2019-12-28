@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationCore", "Applicat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{1F39705E-BAE7-4B50-9B5D-1ED39B34DF89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eUI", "eUI\eUI.csproj", "{8AF16BD8-833E-4925-BDCA-9C8476784C4E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eUI", "eUI\eUI.csproj", "{8AF16BD8-833E-4925-BDCA-9C8476784C4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
